@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "test": "nodemon --ext ts --exec 'jasmine-ts --config=jasmine.json'",
+    "test_once": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
+    "coverage": "nyc -r text -e .ts -x \"src/*.spec.ts\" npm run test"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.5.3",
+    "jasmine": "^3.5.0",
+    "jasmine-ts": "^0.3.0",
+    "nodemon": "^2.0.2",
+    "nyc": "^15.0.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  }
+}

@@ -1,0 +1,1 @@
+ts-node-dev --respawn --transpileOnly $1
