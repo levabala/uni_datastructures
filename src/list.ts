@@ -219,10 +219,13 @@ export function remove<T>(list: List<T>, index: number): List<T> {
 
   // "nth" temporary is missing in wu typings
   const node = (iterable(list) as any).nth(index) as ListElement<T>;
-  if (node.previous) node.previous.next = node.next;
+  if (node.previous)
+    if (node.next) node.previous.next = node.next;
+    else delete node.previous.next;
+
   if (node.next) node.next.previous = node.previous;
 
-  throw errorIndexOutOfBound(count(list), index);
+  return list;
 }
 
 export function removeByValue<T>(list: List<T>, value: T): List<T> {

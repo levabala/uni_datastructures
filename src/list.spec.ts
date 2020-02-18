@@ -1,4 +1,4 @@
-import { count, findIndex, insert, list, push, unshift } from './list';
+import { count, findIndex, insert, list, push, remove, unshift } from './list';
 
 describe("list", () => {
   const l1 = list(1, 2, 3);
@@ -85,16 +85,16 @@ describe("list", () => {
     testData.forEach(data => testFunc(findIndex, data));
   });
 
-  // it("remove", () => {
-  //   const testData: TestData[] = [
-  //     { args: [l1, 0], expected: list(2, 3) },
-  //     { args: [l1, 1], expected: list(1, 3) },
-  //     { args: [l1, 2], expected: list(1, 2) }
-  //   ];
+  it("remove", () => {
+    const testData: TestData[] = [
+      { args: [l1, 0], expected: list(2, 3) },
+      { args: [l1, 1], expected: list(1, 3) },
+      { args: [l1, 2], expected: list(1, 2) }
+    ];
 
-  //   console.log("expected:", listToStringWithLinks(list(2, 3)));
-  //   console.log("actual:", listToStringWithLinks(remove(l1, 0)));
+    // console.log("expected:", listToStringWithLinks(list(1, 2)));
+    // console.log("actual:", listToStringWithLinks(remove(l1, 2)));
 
-  //   testData.forEach(data => testFunc(remove, data));
-  // });
+    testData.forEach(data => testFunc(remove, data));
+  });
 });
