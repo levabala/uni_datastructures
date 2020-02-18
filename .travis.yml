@@ -6,4 +6,5 @@ before_install:
   - yarn build
   - pip install --user codecov
 after_success:
+  - yarn coverage
   - codecov --file coverage/lcov.info --disable search
