@@ -3,7 +3,8 @@
     "test": "nodemon --ext ts --exec 'jasmine-ts --config=jasmine.json'",
     "test_once": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
     "coverage": "nyc -r lcov -r text -e .ts -x \"src/*.spec.ts\" npm run test_once",
-    "init": "node_modules/jasmine/bin/jasmine.js init"
+    "build": "tsc",
+    "setup": "yarn install && node_modules/jasmine/bin/jasmine.js init"
   },
   "devDependencies": {
     "@types/jasmine": "^3.5.3",
