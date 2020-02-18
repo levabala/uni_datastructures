@@ -110,24 +110,26 @@ export function find<T>(list: List<T>, value: T): number {
   return index;
 }
 
-// export function remove<T>(list: List<T>, index: number): List<T> {
-//   let node = list.root;
-//   if (!node) throw errorListIsEmpty();
+export function remove<T>(list: List<T>, index: number): List<T> {
+  let node = list.root;
+  if (!node) throw errorListIsEmpty();
 
-//   list = clone(list);
+  list = clone(list);
 
-//   let i = 0;
-//   while (node) {
-//     if (i === index) {
-//       node.previous.next = node.next;
-//       node.next.previous = node.previous;
+  let i = 0;
+  while (node) {
+    if (i === index) {
+      if (node.previous) node.previous.next = node.next;
+      if (node.next) node.next.previous = node.previous;
 
-//       return list;
-//     }
-//   }
+      return list;
+    }
+    i++;
+    node = node.next;
+  }
 
-//   throw errorIndexOutOfBound(i, index);
-// }
+  throw errorIndexOutOfBound(i, index);
+}
 
 export function toArray<T>(list: List<T>): T[] {
   const elements = [];
@@ -141,23 +143,23 @@ export function toArray<T>(list: List<T>): T[] {
   return elements;
 }
 
-// export function removeByValue<T>(list: List<T>, value: T): List<T> {
-//   let node = list.root;
-//   if (!node) throw errorListIsEmpty();
+export function removeByValue<T>(list: List<T>, value: T): List<T> {
+  let node = list.root;
+  if (!node) throw errorListIsEmpty();
 
-//   list = clone(list);
+  list = clone(list);
 
-//   while (node) {
-//     if (node.value === value) {
-//       node.previous.next = node.next;
-//       node.next.previous = node.previous;
+  while (node) {
+    if (node.value === value) {
+      if (node.previous) node.previous.next = node.next;
+      if (node.next) node.next.previous = node.previous;
 
-//       return list;
-//     }
-//   }
+      return list;
+    }
+  }
 
-//   throw errorNoSuchElement(value);
-// }
+  throw errorNoSuchElement(value);
+}
 
 export function listToString<T>(list: List<T>): string {
   return toArray(list).join(" <-> ");
