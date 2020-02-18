@@ -1,3 +1,5 @@
+import wu from 'wu';
+
 export interface ListElement<T> {
   previous?: ListElement<T>;
   next?: ListElement<T>;
@@ -23,37 +25,85 @@ export function list<T>(...elements: Array<T>): List<T> {
   return { root };
 }
 
+export function* listIterator<T>(list: List<T>) {
+  let node = list.root;
+  // let index = 0;
+  while (node) {
+    yield node;
+    // index++;
+    node = node.next;
+  }
+}
+
+export function iterable<T>(list: List<T>) {
+  return wu(listIterator(list));
+}
+
 export function count<T>(list: List<T>): number {
   list = clone(list);
 
   if (!list.root) return 0;
 
-  let count = 1;
-  let currentNode = list.root;
-
-  while (currentNode.next) {
-    currentNode = currentNode.next;
-    count++;
-  }
+  const iterator = iterable(list);
+  const count = iterator.reduce(count => count + 1, 0);
 
   return count;
+}
+
+export function getNodeNonStrict<T>(
+  list: List<T>,
+  index: number
+): ListElement<T> | undefined {
+  let node = list.root;
+  let i = 0;
+
+  while (node) {
+    if (index === i) return node;
+
+    i++;
+    node = node.next;
+  }
+
+  return undefined;
+}
+
+export function getNode<T>(list: List<T>, index: number): ListElement<T> {
+  const res = getNodeNonStrict(list, index);
+
+  if (!res) throw errorIndexOutOfBound(count(list), index);
+  else return res;
+}
+
+export function get<T>(list: List<T>, index: number): T {
+  return getNode(list, index).value;
+}
+
+export function firstNode<T>(list: List<T>): ListElement<T> {
+  if (!list.root) throw errorListIsEmpty();
+
+  return list.root;
+}
+
+export function lastNode<T>(list: List<T>): ListElement<T> {
+  if (!list.root) throw errorListIsEmpty();
+
+  const lastNode = iterable(list).find(node => !node.next);
+  if (!lastNode) throw errorInvalidList();
+
+  return lastNode;
 }
 
 export function push<T>(list: List<T>, value: T): List<T> {
   if (!list.root) return { root: { value } };
   list = clone(list);
 
-  let lastNode = list.root as ListElement<T>;
+  const last = lastNode(list);
 
-  while (lastNode.next) {
-    lastNode = lastNode.next;
-  }
-
-  lastNode.next = { value, previous: lastNode };
+  last.next = { value, previous: last };
   return list;
 }
 
-export function shift<T>(list: List<T>, value: T): List<T> {
+export function unshift<T>(list: List<T>, value: T): List<T> {
   if (!list.root) return { root: { value } };
   list = clone(list);
 
@@ -68,17 +118,12 @@ export function shift<T>(list: List<T>, value: T): List<T> {
 export function insert<T>(list: List<T>, value: T, index: number): List<T> {
   if (!list.root) return { root: { value } };
 
-  if (index === 0) return shift(list, value);
+  if (index === 0) return unshift(list, value);
 
   list = clone(list);
 
-  let node = list.root as ListElement<T>;
-  let i = 0;
-  while (++i < index) {
-    if (!node.next) throw errorIndexOutOfBound(count(list), index);
-
-    node = node.next;
-  }
+  let node = getNodeNonStrict(list, index);
+  if (!node) return push(list, value);
 
   const newNode: ListElement<T> = {
     value,
@@ -94,7 +139,7 @@ export function insert<T>(list: List<T>, value: T, index: number): List<T> {
   return list;
 }
 
-export function find<T>(list: List<T>, value: T): number {
+export function findIndex<T>(list: List<T>, value: T): number {
   let index = -1;
   let node = list.root;
 
@@ -110,25 +155,42 @@ export function find<T>(list: List<T>, value: T): number {
   return index;
 }
 
+// remove the first element
+export function shift<T>(list: List<T>): List<T> {
+  list = clone(list);
+
+  if (!list.root || !list.root.next) return {};
+
+  delete list.root.next.previous;
+  list.root = list.root.next;
+  return list;
+}
+
+// remove the last element
+export function pop<T>(list: List<T>): List<T> {
+  list = clone(list);
+
+  if (!list.root || !list.root.next) return {};
+
+  const last = lastNode(list);
+  delete last.previous?.next;
+
+  return list;
+}
+
 export function remove<T>(list: List<T>, index: number): List<T> {
-  let node = list.root;
-  if (!node) throw errorListIsEmpty();
+  if (!list.root) throw errorListIsEmpty();
+
+  if (index === 0) return shift(list);
 
   list = clone(list);
 
-  let i = 0;
-  while (node) {
-    if (i === index) {
-      if (node.previous) node.previous.next = node.next;
-      if (node.next) node.next.previous = node.previous;
+  // "nth" temporary is missing in wu typings
+  const node = (iterable(list) as any).nth(index) as ListElement<T>;
+  if (node.previous) node.previous.next = node.next;
+  if (node.next) node.next.previous = node.previous;
 
-      return list;
-    }
-    i++;
-    node = node.next;
-  }
-
-  throw errorIndexOutOfBound(i, index);
+  throw errorIndexOutOfBound(count(list), index);
 }
 
 export function toArray<T>(list: List<T>): T[] {
@@ -196,4 +258,8 @@ export function errorNoSuchElement(value: any) {
 
 export function errorListIsEmpty() {
   return new Error(`List if empty`);
+}
+
+export function errorInvalidList() {
+  return new Error(`List is invalid`);
 }
