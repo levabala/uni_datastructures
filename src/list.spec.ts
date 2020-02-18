@@ -1,4 +1,4 @@
-import { count, findIndex, insert, list, listToStringWithLinks, push, unshift } from './list';
+import { count, findIndex, insert, list, push, unshift } from './list';
 
 describe("list", () => {
   const l1 = list(1, 2, 3);
@@ -6,7 +6,7 @@ describe("list", () => {
   const l3 = list({ a: 123 }, { b: 456 });
   const l4 = list();
 
-  const lists = [l1, l2, l3, l4];
+  // const lists = [l1, l2, l3, l4];
 
   interface TestData {
     args: Array<any>;
@@ -70,8 +70,7 @@ describe("list", () => {
       { args: [l1, 4, 3], expected: list(1, 2, 3, 4) }
     ];
 
-    console.log("expected:", listToStringWithLinks(list(1, 2, 3, 4)));
-    console.log("actual:", listToStringWithLinks(insert(l1, 4, 2)));
+    // console.log("expected:", listToStringWithLinks(list(1, 2, 3, 4)));
 
     testData.forEach(data => testFunc(insert, data));
   });

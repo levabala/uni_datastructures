@@ -10,10 +10,26 @@ export interface List<T> {
   root?: ListElement<T>;
 }
 
+export function errorIndexOutOfBound(capacity: number, index: number) {
+  return new Error(`Capacity ${capacity} is not enough to access ${index}`);
+}
+
+export function errorNoSuchElement(value: any) {
+  return new Error(`List doesn't contain "${value}"`);
+}
+
+export function errorListIsEmpty() {
+  return new Error(`List if empty`);
+}
+
+export function errorInvalidList() {
+  return new Error(`List is invalid`);
+}
+
 export function list<T>(...elements: Array<T>): List<T> {
   if (!elements.length) return {};
 
-  let root: ListElement<T> = { value: elements[0] };
+  const root: ListElement<T> = { value: elements[0] };
   let nodePrevious = root;
   for (let i = 1; i < elements.length; i++) {
     const value = elements[i];
@@ -23,6 +39,22 @@ export function list<T>(...elements: Array<T>): List<T> {
   }
 
   return { root };
+}
+
+export function toArray<T>(list: List<T>): T[] {
+  const elements = [];
+  let currentNode = list.root;
+
+  while (currentNode) {
+    elements.push(currentNode.value);
+    currentNode = currentNode.next;
+  }
+
+  return elements;
+}
+
+export function clone<T>(listOriginal: List<T>): List<T> {
+  return list(...toArray(listOriginal));
 }
 
 export function* listIterator<T>(list: List<T>) {
@@ -122,7 +154,7 @@ export function insert<T>(list: List<T>, value: T, index: number): List<T> {
 
   list = clone(list);
 
-  let node = getNodeNonStrict(list, index);
+  const node = getNodeNonStrict(list, index - 1);
   if (!node) return push(list, value);
 
   const newNode: ListElement<T> = {
@@ -193,20 +225,8 @@ export function remove<T>(list: List<T>, index: number): List<T> {
   throw errorIndexOutOfBound(count(list), index);
 }
 
-export function toArray<T>(list: List<T>): T[] {
-  const elements = [];
-  let currentNode = list.root;
-
-  while (currentNode) {
-    elements.push(currentNode.value);
-    currentNode = currentNode.next;
-  }
-
-  return elements;
-}
-
 export function removeByValue<T>(list: List<T>, value: T): List<T> {
-  let node = list.root;
+  const node = list.root;
   if (!node) throw errorListIsEmpty();
 
   list = clone(list);
@@ -244,22 +264,5 @@ export function listToStringWithLinks<T>(list: List<T>): string {
   return arr.join(", ");
 }
 
-export function clone<T>(listOriginal: List<T>): List<T> {
-  return list(...toArray(listOriginal));
-}
-
-export function errorIndexOutOfBound(capacity: number, index: number) {
-  return new Error(`Capacity ${capacity} is not enough to access ${index}`);
-}
-
-export function errorNoSuchElement(value: any) {
-  return new Error(`List doesn't contain "${value}"`);
-}
-
-export function errorListIsEmpty() {
-  return new Error(`List if empty`);
-}
-
-export function errorInvalidList() {
-  return new Error(`List is invalid`);
-}
+// TODO: configure eslint
+// TODO: fix insert function
