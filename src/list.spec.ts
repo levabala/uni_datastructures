@@ -1,4 +1,31 @@
-import { count, findIndex, insert, list, push, remove, unshift } from './list';
+import {
+  clone,
+  count,
+  errorIndexOutOfBound,
+  errorInvalidList,
+  errorListIsEmpty,
+  errorNoSuchElement,
+  findIndex,
+  getNode,
+  insert,
+  list,
+  listToStringWithLinks,
+  push,
+  remove,
+  unshift,
+} from './list';
+
+// getNodeNonStrict,
+// iterable,
+// lastNode,
+// listIterator,
+// listToString,
+// shift,
+// toArray,
+// firstNode,
+// get,
+// pop,
+// removeByValue
 
 describe("list", () => {
   const l1 = list(1, 2, 3);
@@ -16,6 +43,44 @@ describe("list", () => {
   function testFunc(func: any, { args, expected }: TestData): void {
     expect(func(...args)).toEqual(expected);
   }
+
+  it("getNode", () => {
+    const testData: TestData[] = [
+      { args: [l1, 2], expected: l1.root?.next?.next },
+      { args: [l1, 1], expected: l1.root?.next },
+      { args: [l3, 1], expected: l3.root?.next }
+    ];
+
+    testData.forEach(data => testFunc(getNode, data));
+  });
+
+  it("errors", () => {
+    expect(errorIndexOutOfBound(1, 3).message).toEqual(
+      "Capacity 1 is not enough to access 3"
+    );
+    expect(errorInvalidList().message).toEqual("List is invalid");
+    expect(errorListIsEmpty().message).toEqual("List is empty");
+    expect(errorNoSuchElement("qwe").message).toEqual(
+      'List doesn\'t contain "qwe"'
+    );
+  });
+
+  it("clone", () => {
+    const testData: TestData[] = [
+      { args: [l1], expected: list(1, 2, 3) },
+      { args: [l2], expected: list("qwe", "asd", "zxczxc", "a", "b") }
+    ];
+
+    testData.forEach(data => testFunc(clone, data));
+  });
+
+  it("listToStringWithLinks", () => {
+    const testData: TestData[] = [
+      { args: [l1], expected: "1 (none, 2), 2 (1, 3), 3 (2, none)" }
+    ];
+
+    testData.forEach(data => testFunc(listToStringWithLinks, data));
+  });
 
   it("count", () => {
     const testData: TestData[] = [
@@ -91,9 +156,6 @@ describe("list", () => {
       { args: [l1, 1], expected: list(1, 3) },
       { args: [l1, 2], expected: list(1, 2) }
     ];
-
-    // console.log("expected:", listToStringWithLinks(list(1, 2)));
-    // console.log("actual:", listToStringWithLinks(remove(l1, 2)));
 
     testData.forEach(data => testFunc(remove, data));
   });

@@ -19,7 +19,7 @@ export function errorNoSuchElement(value: any) {
 }
 
 export function errorListIsEmpty() {
-  return new Error(`List if empty`);
+  return new Error(`List is empty`);
 }
 
 export function errorInvalidList() {
