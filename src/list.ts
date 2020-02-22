@@ -22,9 +22,9 @@ export function errorListIsEmpty() {
   return new Error(`List is empty`);
 }
 
-export function errorInvalidList() {
-  return new Error(`List is invalid`);
-}
+// export function errorInvalidList() {
+//   return new Error(`List is invalid`);
+// }
 
 export function list<T>(...elements: Array<T>): List<T> {
   if (!elements.length) return {};
@@ -59,10 +59,9 @@ export function clone<T>(listOriginal: List<T>): List<T> {
 
 export function* listIterator<T>(list: List<T>) {
   let node = list.root;
-  // let index = 0;
+
   while (node) {
     yield node;
-    // index++;
     node = node.next;
   }
 }
@@ -76,8 +75,7 @@ export function count<T>(list: List<T>): number {
 
   if (!list.root) return 0;
 
-  const iterator = iterable(list);
-  const count = iterator.reduce(count => count + 1, 0);
+  const count = iterable(list).reduce(count => count + 1, 0);
 
   return count;
 }
@@ -119,8 +117,7 @@ export function firstNode<T>(list: List<T>): ListElement<T> {
 export function lastNode<T>(list: List<T>): ListElement<T> {
   if (!list.root) throw errorListIsEmpty();
 
-  const lastNode = iterable(list).find(node => !node.next);
-  if (!lastNode) throw errorInvalidList();
+  const lastNode = iterable(list).find(node => !node.next) as ListElement<T>;
 
   return lastNode;
 }
@@ -184,7 +181,7 @@ export function findIndex<T>(list: List<T>, value: T): number {
     node = node.next;
   }
 
-  return index;
+  return -1;
 }
 
 // remove the first element
@@ -205,7 +202,8 @@ export function pop<T>(list: List<T>): List<T> {
   if (!list.root || !list.root.next) return {};
 
   const last = lastNode(list);
-  delete last.previous?.next;
+  const preLast = last.previous as ListElement<T>;
+  delete preLast.next;
 
   return list;
 }
@@ -229,21 +227,32 @@ export function remove<T>(list: List<T>, index: number): List<T> {
 }
 
 export function removeByValue<T>(list: List<T>, value: T): List<T> {
-  const node = list.root;
-  if (!node) throw errorListIsEmpty();
-
   list = clone(list);
 
+  let node = list.root;
+  if (!node) throw errorListIsEmpty();
+
+  let counter = 0;
   while (node) {
     if (node.value === value) {
-      if (node.previous) node.previous.next = node.next;
-      if (node.next) node.next.previous = node.previous;
+      if (counter === 0) return shift(list);
+
+      const preNode = node.previous;
+      const postNode = node.next;
+      if (preNode)
+        if (postNode) preNode.next = postNode;
+        else delete preNode.next;
+      if (postNode) postNode.previous = preNode;
 
       return list;
     }
+
+    node = node.next;
+    counter++;
   }
 
-  throw errorNoSuchElement(value);
+  // throw errorNoSuchElement(value);
+  return list;
 }
 
 export function listToString<T>(list: List<T>): string {
