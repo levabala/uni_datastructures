@@ -22,9 +22,9 @@ export function errorListIsEmpty() {
   return new Error(`List is empty`);
 }
 
-// export function errorInvalidList() {
-//   return new Error(`List is invalid`);
-// }
+export function isList<T>(list: any): list is List<T> {
+  return !!list.root;
+}
 
 export function list<T>(...elements: Array<T>): List<T> {
   if (!elements.length) return {};
@@ -159,10 +159,11 @@ export function insert<T>(list: List<T>, value: T, index: number): List<T> {
     previous: node
   };
 
-  if (node.next) newNode.next = node.next;
+  if (node.next) {
+    newNode.next = node.next;
+    node.next.previous = newNode;
+  }
 
-  // if (node.next) node.next.previous = newNode;
-  if (node.next) node.next.previous = newNode;
   node.next = newNode;
 
   return list;
@@ -275,6 +276,3 @@ export function listToStringWithLinks<T>(list: List<T>): string {
 
   return arr.join(", ");
 }
-
-// TODO: configure eslint
-// TODO: fix insert function
