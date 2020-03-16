@@ -4,7 +4,9 @@
     "test_watch": "nodemon --ext ts --exec 'jasmine-ts --config=jasmine.json'",
     "coverage": "nyc -r lcov -r text -e .ts -x \"src/*.spec.ts\" yarn test",
     "build": "tsc",
-    "setup": "yarn install && node_modules/jasmine/bin/jasmine.js init && cd node_modules/wu && yarn install && yarn build"
+    "setup": "yarn install && node_modules/jasmine/bin/jasmine.js init && cd node_modules/wu && yarn install && yarn build",
+    "runScriptWatch": "ts-node-dev --respawn --transpileOnly",
+    "runScript": "ts-node-dev --transpileOnly"
   },
   "devDependencies": {
     "@types/jasmine": "^3.5.3",

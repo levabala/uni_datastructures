@@ -13,6 +13,6 @@
 `npm install`
 
 ## List
-To execute list using script type (linux):
+To execute list using script type:
 
-`./run.sh src/list.use.ts`
+`npm run runScript src/list.use.ts`
