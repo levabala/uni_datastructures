@@ -86,8 +86,8 @@ describe("stack", () => {
   });
 
   it("top", () => {
-    expect(s1.top).toEqual(3);
-    expect(s2.top).toEqual(s23);
+    expect(s1.top()).toEqual(3);
+    expect(s2.top()).toEqual(s23);
   });
 
   it("top empty list", () => {
