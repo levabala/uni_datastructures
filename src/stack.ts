@@ -13,6 +13,10 @@ export function errorPopEmpty() {
   return new Error(`Cannot pop empty stack`);
 }
 
+export function errorTopEmpty() {
+  return new Error(`Cannot get the top element of empty stack`);
+}
+
 export default class Stack<T> {
   _topElement: StackElement<T> | undefined = undefined;
   capacity: number;
@@ -50,8 +54,8 @@ export default class Stack<T> {
     return value;
   }
 
-  top(): T {
-    if (!this._topElement) throw errorPopEmpty();
+  get top(): T {
+    if (!this._topElement) throw errorTopEmpty();
 
     return this._topElement.value;
   }
@@ -67,11 +71,32 @@ export default class Stack<T> {
     return this;
   }
 
+  setCapacity(capacity: number): Stack<T> {
+    this.capacity = capacity;
+
+    return this;
+  }
+
   clone(): Stack<T> {
     const newStack = new Stack<T>(this.capacity);
     newStack._topElement = this._topElement;
     newStack.length = this.length;
 
     return newStack;
+  }
+
+  toString(): string {
+    if (!this.length) return `(${this.length}/${this.capacity}) empty`;
+
+    const elements = [];
+    let topEl = this._topElement;
+    while (topEl) {
+      elements.push(topEl.value);
+      topEl = topEl.prev;
+    }
+
+    return `(${this.length}/${this.capacity}) ${elements
+      .reverse()
+      .join(" - ")}`;
   }
 }

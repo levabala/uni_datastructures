@@ -1,4 +1,4 @@
-import Stack, { errorOverflow, errorPopEmpty, StackElement } from './stack';
+import Stack, { errorOverflow, errorPopEmpty, errorTopEmpty, StackElement } from './stack';
 
 describe("stack", () => {
   const s1 = new Stack(Infinity, 1, 2, 3);
@@ -86,12 +86,12 @@ describe("stack", () => {
   });
 
   it("top", () => {
-    expect(s1.top()).toEqual(3);
-    expect(s2.top()).toEqual(s23);
+    expect(s1.top).toEqual(3);
+    expect(s2.top).toEqual(s23);
   });
 
   it("top empty list", () => {
-    expect(() => s3.top()).toThrow(errorPopEmpty());
+    expect(() => s3.top()).toThrow(errorTopEmpty());
   });
 
   it("isEmpty", () => {
@@ -107,5 +107,15 @@ describe("stack", () => {
   it("clone", () => {
     expect(s1.clone()).toEqual(s1);
     expect(s3.clone()).toEqual(s3);
+  });
+
+  it("toString", () => {
+    expect(s1.toString()).toEqual("(3/Infinity) 1 - 2 - 3");
+    expect(s3.toString()).toEqual("(0/Infinity) empty");
+    expect(new Stack(2).toString()).toEqual("(0/2) empty");
+  });
+
+  it("setCapacity", () => {
+    expect(s1.clone().setCapacity(5).capacity).toEqual(5);
   });
 });
