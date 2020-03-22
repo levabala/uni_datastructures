@@ -9,7 +9,10 @@
       "request": "launch",
       "name": "Jasmine Current File",
       "program": "${workspaceFolder}/node_modules/jasmine/bin/jasmine",
-      "args": ["--config=jasmine.json", "${workspaceFolder}/build/*.spec.js"],
+      "args": [
+        "--config=jasmine.json",
+        "${workspaceFolder}/build/**/*.spec.js"
+      ],
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/build/*.js"],
       "console": "integratedTerminal",
