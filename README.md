@@ -16,3 +16,15 @@
 To execute list using script type:
 
 `npm run runScript src/list.use.ts`
+
+## Stack
+
+To execute list using script type:
+
+`npm run runScript src/stack.use.ts`
+
+## Brakets tester
+
+To execute tester using script type:
+
+`npm run runScript src/programs/bracketsTester.use.ts`
