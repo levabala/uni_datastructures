@@ -9,7 +9,10 @@ describe("bracketsTester", () => {
     const valid = "(), {}, [{}], (){}[], [[]], [()[]()][]".split(", ");
     valid.forEach(s => test(s, true));
 
-    const invalid = "], )(, []{), (], ([)] ".split(", ");
+    const invalid = "], )(, []{), (], ([)]".split(", ");
     invalid.forEach(s => test(s, false));
+
+    test("", false);
+    test("qwdmiasdmfoaimef", false);
   });
 });
