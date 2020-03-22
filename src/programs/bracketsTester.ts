@@ -35,8 +35,8 @@ export function testBrackets(bracketsRaw: string[]): boolean {
 
     const [bracketType, bracketState] = bracket;
 
-    if (!s.isEmpty() && s.top[0] === bracketType)
-      if (s.top[1] === State.Opened && bracketState === State.Closed) s.pop();
+    if (!s.isEmpty() && s.top()[0] === bracketType)
+      if (s.top()[1] === State.Opened && bracketState === State.Closed) s.pop();
       else s.push(bracket);
     else s.push(bracket);
 

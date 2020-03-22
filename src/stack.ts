@@ -54,7 +54,7 @@ export default class Stack<T> {
     return value;
   }
 
-  get top(): T {
+  top(): T {
     if (!this._topElement) throw errorTopEmpty();
 
     return this._topElement.value;
