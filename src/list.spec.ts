@@ -10,6 +10,7 @@ import {
   getNode,
   getNodeNonStrict,
   insert,
+  isList,
   lastNode,
   list,
   listToString,
@@ -43,6 +44,11 @@ describe("list", () => {
   function testFunc(func: any, { args, expected }: TestData): void {
     expect(func(...args)).toEqual(expected);
   }
+
+  it("isList", () => {
+    expect(isList(l1)).toBeTrue();
+    expect(isList({})).toBeFalse();
+  });
 
   it("removeByValue", () => {
     const testData: TestData[] = [
